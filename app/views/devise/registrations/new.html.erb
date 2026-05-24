@@ -1,0 +1,80 @@
+<div class="max-w-md w-full mx-auto my-12">
+  <div class="glass p-8 rounded-2xl border border-slate-800 shadow-2xl">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Join Nexhire
+      </h2>
+      <p class="text-slate-400 text-sm mt-2">Create your account to start matching today</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Role Selection Cards -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-slate-300 mb-3">I want to register as a:</label>
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Applicant Option -->
+          <label class="relative block cursor-pointer group">
+            <%= f.radio_button :role, "applicant", checked: true, class: "sr-only peer" %>
+            <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-900 hover:border-slate-700 text-center transition-all duration-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-500/10 peer-checked:text-white">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-2 text-indigo-400 border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <span class="block text-sm font-bold text-slate-200">Applicant</span>
+              <span class="block text-[11px] text-slate-400 mt-1">Apply & take test</span>
+            </div>
+          </label>
+
+          <!-- Recruiter Option -->
+          <label class="relative block cursor-pointer group">
+            <%= f.radio_button :role, "recruiter", class: "sr-only peer" %>
+            <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-900 hover:border-slate-700 text-center transition-all duration-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-500/10 peer-checked:text-white">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-2 text-indigo-400 border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span class="block text-sm font-bold text-slate-200">Recruiter</span>
+              <span class="block text-[11px] text-slate-400 mt-1">Post jobs & hire</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-5">
+        <%= f.label :email, class: "block text-sm font-medium text-slate-300 mb-1.5" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-5">
+        <div class="flex justify-between items-center mb-1.5">
+          <%= f.label :password, class: "block text-sm font-medium text-slate-300" %>
+          <% if @minimum_password_length %>
+            <span class="text-[11px] text-slate-500 font-normal">(<%= @minimum_password_length %> chars min)</span>
+          <% end %>
+        </div>
+        <%= f.password_field :password, autocomplete: "new-password", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+
+      <!-- Password Confirmation -->
+      <div class="mb-6">
+        <%= f.label :password_confirmation, "Confirm Password", class: "block text-sm font-medium text-slate-300 mb-1.5" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+
+      <div class="mt-8">
+        <%= f.submit "Create Account", class: "w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-sm font-bold text-white rounded-xl shadow-lg shadow-indigo-500/25 transition-all duration-250 cursor-pointer text-center" %>
+      </div>
+    <% end %>
+
+    <div class="mt-6 pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+      Already have an account? 
+      <%= link_to "Log in", new_user_session_path, class: "text-indigo-400 hover:text-indigo-300 font-semibold transition-colors" %>
+    </div>
+  </div>
+</div>

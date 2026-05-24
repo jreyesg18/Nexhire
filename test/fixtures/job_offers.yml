@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  recruiter: one
+  title: MyString
+  company_name: MyString
+  description: MyText
+  location: MyString
+  salary: MyString
+  ideal_openness: 1
+  ideal_conscientiousness: 1
+  ideal_extraversion: 1
+  ideal_agreeableness: 1
+  ideal_neuroticism: 1
+
+two:
+  recruiter: two
+  title: MyString
+  company_name: MyString
+  description: MyText
+  location: MyString
+  salary: MyString
+  ideal_openness: 1
+  ideal_conscientiousness: 1
+  ideal_extraversion: 1
+  ideal_agreeableness: 1
+  ideal_neuroticism: 1

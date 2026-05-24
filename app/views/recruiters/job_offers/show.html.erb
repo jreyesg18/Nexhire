@@ -1,0 +1,135 @@
+<div class="space-y-6">
+  
+  <%= link_to recruiters_job_offers_path, class: "inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors mb-2" do %>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+    </svg>
+    Back to Recruiter Dashboard
+  <% end %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    
+    <!-- Left Column: Job Details & Target OCEAN Blueprint -->
+    <div class="lg:col-span-1 space-y-6">
+      <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-slate-100 leading-tight"><%= @job_offer.title %></h2>
+          <p class="text-xs text-indigo-400 font-bold mt-1"><%= @job_offer.company_name %></p>
+          <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] font-bold text-slate-500 mt-3">
+            <span><%= @job_offer.location %></span>
+            <span>&middot;</span>
+            <span><%= @job_offer.salary %></span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-900 pt-5 space-y-4">
+          <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Ideal OCEAN Target</h3>
+          
+          <% [
+            { name: "Openness", val: @job_offer.ideal_openness, color: "bg-cyan-500", text: "text-cyan-400" },
+            { name: "Conscientiousness", val: @job_offer.ideal_conscientiousness, color: "bg-indigo-500", text: "text-indigo-400" },
+            { name: "Extraversion", val: @job_offer.ideal_extraversion, color: "bg-amber-500", text: "text-amber-400" },
+            { name: "Agreeableness", val: @job_offer.ideal_agreeableness, color: "bg-emerald-500", text: "text-emerald-400" },
+            { name: "Neuroticism", val: @job_offer.ideal_neuroticism, color: "bg-rose-500", text: "text-rose-400" }
+          ].each do |dim| %>
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs text-slate-400 font-semibold">
+                <span><%= dim[:name] %></span>
+                <span class="<%= dim[:text] %> font-bold"><%= dim[:val] %>%</span>
+              </div>
+              <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden border border-slate-850">
+                <div class="<%= dim[:color] %> h-full rounded-full" style="width: <%= dim[:val] %>%"></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="border-t border-slate-900 pt-5">
+          <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">Job Description</h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-6 whitespace-pre-wrap"><%= @job_offer.description %></p>
+        </div>
+
+        <div class="pt-2">
+          <%= link_to "Edit Job Details", edit_recruiters_job_offer_path(@job_offer), class: "block w-full py-2.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 font-bold text-xs text-center rounded-xl transition-colors" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Ranked Applicant Submissions -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl">
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-slate-100">Ranked Applicants</h3>
+          <p class="text-xs text-slate-400 mt-1">Candidates ranked objectively by OCEAN profile proximity</p>
+        </div>
+
+        <div class="space-y-4">
+          <% if @job_applications.any? %>
+            <% @job_applications.each_with_index do |app, index| %>
+              <% profile = app.applicant.applicant_profile %>
+              <div class="p-5 rounded-xl border border-slate-800/80 bg-slate-950/20 hover:border-slate-700 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                
+                <div class="flex items-center gap-4">
+                  <!-- Rank Badge -->
+                  <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-850 flex items-center justify-center font-bold text-xs <%= index == 0 ? 'text-indigo-400 border-indigo-500/20' : 'text-slate-500' %>">
+                    #<%= index + 1 %>
+                  </div>
+
+                  <!-- Applicant Profile Snapshot -->
+                  <div class="flex items-center gap-3">
+                    <% if profile.photo.attached? %>
+                      <%= image_tag profile.photo, class: "w-10 h-10 rounded-full object-cover border border-slate-850" %>
+                    <% else %>
+                      <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-400">
+                        <%= profile.name[0..1].upcase %>
+                      </div>
+                    <% end %>
+                    <div>
+                      <h4 class="text-sm font-bold text-slate-200"><%= profile.name %></h4>
+                      <span class="text-[10px] text-slate-500 block">Applied <%= time_ago_in_words(app.created_at) %> ago</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Match Score & Actions -->
+                <div class="flex items-center gap-4 justify-between sm:justify-end border-t border-slate-900 sm:border-0 pt-3 sm:pt-0">
+                  <div class="text-center sm:text-right">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mb-0.5">Match Score</span>
+                    <% match = app.match_percentage %>
+                    <% match_color = match >= 80 ? 'text-emerald-400' : (match >= 60 ? 'text-amber-400' : 'text-rose-400') %>
+                    <span class="text-sm font-black <%= match_color %>"><%= match %>%</span>
+                  </div>
+
+                  <div class="text-center sm:text-right">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mb-0.5">Status</span>
+                    <% status_class = case app.status
+                       when 'pending' then 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
+                       when 'reviewed' then 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                       when 'accepted' then 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                       when 'rejected' then 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                       else 'bg-slate-900 text-slate-400'
+                       end
+                    %>
+                    <span class="px-2 py-0.5 text-[10px] font-bold rounded border <%= status_class %>">
+                      <%= app.status.capitalize %>
+                    </span>
+                  </div>
+
+                  <div>
+                    <%= link_to "Review Profile", recruiters_job_offer_job_application_path(@job_offer, app), class: "px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg text-xs font-bold text-slate-300 transition-colors" %>
+                  </div>
+                </div>
+
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-12 text-slate-500 text-sm border border-dashed border-slate-800 rounded-xl">
+              No applicants have applied to this job yet.
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

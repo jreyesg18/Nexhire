@@ -1,0 +1,123 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  
+  <!-- Left Column: Personal info & Skills -->
+  <div class="space-y-6">
+    <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl">
+      <h3 class="text-lg font-bold text-slate-100 mb-6">Personal Information</h3>
+      
+      <%= form_with(model: @profile, url: applicants_profile_path, method: :put, local: true, class: "space-y-5") do |f| %>
+        
+        <!-- Profile Photo -->
+        <div class="flex flex-col items-center gap-4 mb-6">
+          <div class="relative group">
+            <% if @profile.photo.attached? %>
+              <%= image_tag @profile.photo, class: "w-28 h-28 rounded-full object-cover border-2 border-indigo-500 shadow-lg shadow-indigo-500/10 group-hover:opacity-75 transition-opacity" %>
+            <% else %>
+              <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-black text-3xl text-white border-2 border-indigo-400 shadow-lg shadow-indigo-500/10 group-hover:opacity-75 transition-opacity">
+                <%= @profile.name.to_s[0..1].upcase %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="w-full text-center">
+            <%= f.label :photo, "Change Photo", class: "cursor-pointer text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors" %>
+            <%= f.file_field :photo, accept: 'image/*', class: "hidden" %>
+            <p class="text-[10px] text-slate-500 mt-1">Accepts PNG, JPG (max 2MB)</p>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div>
+          <%= f.label :name, "Full Name", class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+          <%= f.text_field :name, class: "glass-input w-full px-4.5 py-2.5 rounded-xl text-sm" %>
+        </div>
+
+        <!-- Skills -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <%= f.label :skills, class: "block text-xs font-semibold text-slate-400" %>
+            <span class="text-[10px] text-slate-500 font-normal">Comma-separated</span>
+          </div>
+          <%= f.text_area :skills, rows: 3, placeholder: "e.g. Ruby, Rails, React, Postgres", class: "glass-input w-full px-4.5 py-2.5 rounded-xl text-sm" %>
+        </div>
+
+        <!-- Skills Pills Preview -->
+        <% if @profile.skill_list.any? %>
+          <div class="pt-2">
+            <span class="block text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-wider">Skills Preview</span>
+            <div class="flex flex-wrap gap-1.5">
+              <% @profile.skill_list.each do |skill| %>
+                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                  <%= skill %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="pt-4">
+          <%= f.submit "Save Profile Details", class: "w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white rounded-xl transition-all cursor-pointer text-center" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Right Column: Work History & Education -->
+  <div class="lg:col-span-2 space-y-8">
+    
+    <!-- Work Experiences Section -->
+    <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-slate-100">Work Experience</h3>
+          <p class="text-xs text-slate-400 mt-1">Your professional history</p>
+        </div>
+      </div>
+
+      <!-- Add New Work Experience Form -->
+      <div class="p-5 rounded-xl border border-slate-800 bg-slate-950/40 mb-6">
+        <h4 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-4">Add Work Experience</h4>
+        <%= render "applicants/work_experiences/form", profile: @profile, new_work_experience: @new_work_experience %>
+      </div>
+
+      <!-- List of Work Experiences -->
+      <div id="work-experiences-list" class="space-y-4">
+        <% if @profile.work_experiences.any? %>
+          <%= render partial: "applicants/work_experiences/work_experience", collection: @profile.work_experiences %>
+        <% else %>
+          <div class="text-center py-8 text-slate-500 text-sm">
+            No work experiences added yet.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Education Section -->
+    <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-slate-100">Education</h3>
+          <p class="text-xs text-slate-400 mt-1">Degrees and certifications</p>
+        </div>
+      </div>
+
+      <!-- Add New Education Form -->
+      <div class="p-5 rounded-xl border border-slate-800 bg-slate-950/40 mb-6">
+        <h4 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-4">Add Education Entry</h4>
+        <%= render "applicants/educations/form", profile: @profile, new_education: @new_education %>
+      </div>
+
+      <!-- List of Educations -->
+      <div id="educations-list" class="space-y-4">
+        <% if @profile.educations.any? %>
+          <%= render partial: "applicants/educations/education", collection: @profile.educations %>
+        <% else %>
+          <div class="text-center py-8 text-slate-500 text-sm">
+            No education entries added yet.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>
