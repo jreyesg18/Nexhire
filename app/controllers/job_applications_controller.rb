@@ -8,7 +8,7 @@ class JobApplicationsController < ApplicationController
 
   def create
     @job_offer = JobOffer.find(params[:job_offer_id])
-    
+
     unless current_user.has_valid_test_result?
       redirect_to applicants_personality_test_path, alert: "Your personality test has expired or is missing. Please take the OCEAN assessment to unlock applications."
       return

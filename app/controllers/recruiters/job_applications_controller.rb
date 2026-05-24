@@ -2,7 +2,7 @@ class Recruiters::JobApplicationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!
   before_action :set_job_offer
-  before_action :set_job_application, only: [:show, :update_status]
+  before_action :set_job_application, only: [ :show, :update_status ]
 
   def show
     @applicant = @job_application.applicant

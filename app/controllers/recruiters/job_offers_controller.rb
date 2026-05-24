@@ -1,7 +1,7 @@
 class Recruiters::JobOffersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!
-  before_action :set_job_offer, only: [:show, :edit, :update, :destroy]
+  before_action :set_job_offer, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @job_offers = current_user.job_offers.order(created_at: :desc)
