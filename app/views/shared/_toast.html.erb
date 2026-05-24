@@ -1,0 +1,23 @@
+<div data-controller="toast" class="pointer-events-auto w-full max-w-sm rounded-xl border border-slate-800 bg-slate-900/95 p-4 shadow-xl backdrop-blur-md transform translate-y-4 opacity-0 transition-all duration-300 ease-out flex items-center justify-between gap-3">
+  <div class="flex items-center gap-2.5">
+    <% if type == :alert %>
+      <div class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+    <% else %>
+      <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+    <% end %>
+    <p class="text-sm font-semibold text-slate-200"><%= message %></p>
+  </div>
+  <button data-action="click->toast#close" class="text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+</div>

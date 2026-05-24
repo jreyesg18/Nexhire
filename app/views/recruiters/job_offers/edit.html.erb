@@ -1,0 +1,17 @@
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center gap-2 mb-2">
+    <%= link_to recruiters_job_offer_path(@job_offer), class: "inline-flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-white transition-colors" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+      </svg>
+      Job Details
+    <% end %>
+  </div>
+
+  <div>
+    <h2 class="text-3xl font-extrabold text-slate-100">Edit Job Offer</h2>
+    <p class="text-xs text-slate-400 mt-1">Update details or adjust target personality sliders</p>
+  </div>
+
+  <%= render "form", job_offer: @job_offer %>
+</div>

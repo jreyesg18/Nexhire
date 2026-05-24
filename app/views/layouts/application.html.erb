@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title><%= content_for(:title) || "Nexhire | Talent Matching Platform" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Nexhire">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+    <!-- Navbar -->
+    <header class="glass sticky top-0 z-50 w-full shadow-md border-b border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <%= link_to root_path, class: "flex items-center gap-2 group" do %>
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                N
+              </div>
+              <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-extrabold text-2xl tracking-tight">
+                Nexhire
+              </span>
+            <% end %>
+          </div>
+
+          <!-- Navigation Links -->
+          <nav class="hidden md:flex items-center gap-6">
+            <% if user_signed_in? %>
+              <% if current_user.applicant? %>
+                <%= link_to "Find Jobs", job_offers_path, class: "text-slate-300 hover:text-indigo-400 text-sm font-medium transition-colors" %>
+                <%= link_to "My Applications", job_applications_path, class: "text-slate-300 hover:text-indigo-400 text-sm font-medium transition-colors" %>
+                <%= link_to "My Profile", applicants_profile_path, class: "text-slate-300 hover:text-indigo-400 text-sm font-medium transition-colors" %>
+                
+                <% if current_user.has_valid_test_result? %>
+                  <%= link_to applicants_personality_test_path, class: "flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold hover:bg-emerald-500/20 transition-colors" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    OCEAN Active
+                  <% end %>
+                <% else %>
+                  <%= link_to applicants_personality_test_path, class: "flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-semibold hover:bg-rose-500/20 transition-colors" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                    Take OCEAN Test
+                  <% end %>
+                <% end %>
+              <% elsif current_user.recruiter? %>
+                <%= link_to "Manage Offers", recruiters_job_offers_path, class: "text-slate-300 hover:text-indigo-400 text-sm font-medium transition-colors" %>
+                <%= link_to recruiters_job_offers_path, class: "px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-semibold" do %>
+                  Recruiter Portal
+                <% end %>
+              <% end %>
+            <% end %>
+          </nav>
+
+          <!-- User Actions -->
+          <div class="flex items-center gap-4">
+            <% if user_signed_in? %>
+              <div class="hidden sm:flex flex-col items-end">
+                <span class="text-xs text-slate-400"><%= current_user.email %></span>
+              </div>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 text-sm font-semibold rounded-lg border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all cursor-pointer" %>
+            <% else %>
+              <%= link_to "Log In", new_user_session_path, class: "text-slate-300 hover:text-white text-sm font-semibold transition-colors" %>
+              <%= link_to "Sign Up", new_user_registration_path, class: "px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-sm font-semibold text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-200" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Notification Banners -->
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-4">
+      <% if notice %>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 shadow-md">
+          <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-sm font-medium"><%= notice %></span>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 shadow-md">
+          <svg class="w-5 h-5 text-rose-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span class="text-sm font-medium"><%= alert %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <%= yield %>
+    </main>
+
+    <!-- Dynamic Toast Notification Container -->
+    <div id="notifications" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-6 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-sm">
+        <div>
+          &copy; <%= Time.current.year %> Nexhire. All rights reserved.
+        </div>
+        <div class="flex gap-4">
+          <span class="hover:text-slate-400 transition-colors">Heuristic Personality Matching</span>
+          <span>&middot;</span>
+          <span class="hover:text-slate-400 transition-colors">No AI Bias</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

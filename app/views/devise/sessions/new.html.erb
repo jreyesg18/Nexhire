@@ -1,0 +1,44 @@
+<div class="max-w-md w-full mx-auto my-16">
+  <div class="glass p-8 rounded-2xl border border-slate-800 shadow-2xl">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Welcome Back
+      </h2>
+      <p class="text-slate-400 text-sm mt-2">Log in to your Nexhire account</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <!-- Email -->
+      <div class="mb-5">
+        <%= f.label :email, class: "block text-sm font-medium text-slate-300 mb-1.5" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-5">
+        <div class="flex justify-between items-center mb-1.5">
+          <%= f.label :password, class: "block text-sm font-medium text-slate-300" %>
+          <%= link_to "Forgot?", new_user_password_path, class: "text-xs text-indigo-400 hover:text-indigo-300 transition-colors" %>
+        </div>
+        <%= f.password_field :password, autocomplete: "current-password", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+
+      <!-- Remember Me -->
+      <% if devise_mapping.rememberable? %>
+        <div class="flex items-center mb-6">
+          <%= f.check_box :remember_me, class: "w-4 h-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-950" %>
+          <%= f.label :remember_me, class: "ml-2.5 text-sm text-slate-400 select-none cursor-pointer" %>
+        </div>
+      <% end %>
+
+      <div class="mt-8">
+        <%= f.submit "Log In", class: "w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-sm font-bold text-white rounded-xl shadow-lg shadow-indigo-500/25 transition-all duration-250 cursor-pointer text-center" %>
+      </div>
+    <% end %>
+
+    <div class="mt-6 pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+      New to Nexhire? 
+      <%= link_to "Create an account", new_user_registration_path, class: "text-indigo-400 hover:text-indigo-300 font-semibold transition-colors" %>
+    </div>
+  </div>
+</div>

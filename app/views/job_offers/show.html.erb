@@ -1,0 +1,150 @@
+<div class="space-y-6">
+  
+  <%= link_to job_offers_path, class: "inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors mb-2" do %>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+    </svg>
+    Back to Job Listings
+  <% end %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    
+    <!-- Left Column: Job details & full description -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+        <div>
+          <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+            <%= @job_offer.company_name %>
+          </span>
+          <h2 class="text-3xl font-extrabold text-slate-100 mt-4 leading-tight"><%= @job_offer.title %></h2>
+          
+          <div class="flex flex-wrap gap-4 mt-4 text-xs font-bold text-slate-500">
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-slate-650" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <%= @job_offer.location %>
+            </span>
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-slate-650" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <%= @job_offer.salary %>
+            </span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-900 pt-6">
+          <h3 class="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-3">Job Description</h3>
+          <p class="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap"><%= @job_offer.description %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive match status or Application actions -->
+    <div class="space-y-6">
+      
+      <% if user_signed_in? %>
+        <% if current_user.applicant? %>
+          
+          <!-- Applicant View -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+            <h3 class="text-lg font-bold text-slate-100">Application Centre</h3>
+
+            <% if @valid_test %>
+              <!-- Display Match Percentage Card -->
+              <div class="p-5 rounded-xl border border-slate-800 bg-slate-900/40 text-center space-y-3">
+                <span class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest block">Your Psychometric Alignment</span>
+                <div class="inline-flex items-center justify-center p-4 rounded-full bg-indigo-500/10 border-2 border-indigo-500/20 w-24 h-24 shadow-md">
+                  <span class="text-2xl font-black text-indigo-300"><%= @match_percentage %>%</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed px-2">
+                  Calculated based on your distance to the recruiter's ideal OCEAN profile.
+                </p>
+              </div>
+
+              <!-- Match Breakdown Details -->
+              <div class="space-y-4">
+                <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider block">Dimension Breakdown</span>
+                <% latest_test = current_user.latest_valid_test_result %>
+                
+                <% [
+                  { name: "Openness", val: latest_test.openness, target: @job_offer.ideal_openness, color: "bg-cyan-500" },
+                  { name: "Conscientiousness", val: latest_test.conscientiousness, target: @job_offer.ideal_conscientiousness, color: "bg-indigo-500" },
+                  { name: "Extraversion", val: latest_test.extraversion, target: @job_offer.ideal_extraversion, color: "bg-amber-500" },
+                  { name: "Agreeableness", val: latest_test.agreeableness, target: @job_offer.ideal_agreeableness, color: "bg-emerald-500" },
+                  { name: "Neuroticism", val: latest_test.neuroticism, target: @job_offer.ideal_neuroticism, color: "bg-rose-500" }
+                ].each do |dim| %>
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs text-slate-400 font-semibold">
+                      <span><%= dim[:name] %></span>
+                      <span>You: <strong class="text-slate-200"><%= dim[:val] %>%</strong> &middot; Target: <strong class="text-slate-200"><%= dim[:target] %>%</strong></span>
+                    </div>
+                    <!-- Comparative visual representation: Double progress bar or side-by-side dots -->
+                    <div class="relative h-1.5 w-full bg-slate-900 rounded-full border border-slate-850 overflow-hidden">
+                      <!-- Ideal Bar -->
+                      <div class="absolute top-0 bottom-0 left-0 bg-slate-800 opacity-60 rounded-full" style="width: <%= dim[:target] %>%"></div>
+                      <!-- Your Bar -->
+                      <div class="absolute top-0 bottom-0 left-0 <%= dim[:color] %> rounded-full" style="width: <%= dim[:val] %>%"></div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Application Button -->
+              <div class="pt-4 border-t border-slate-900">
+                <% if @already_applied %>
+                  <% application = current_user.job_applications.find_by(job_offer: @job_offer) %>
+                  <div class="text-center p-3.5 rounded-xl border border-indigo-500/25 bg-indigo-500/10 text-indigo-400 text-xs font-bold leading-normal">
+                    Applied! Status: <%= application.status.capitalize %>
+                    <div class="text-[10px] text-slate-400 font-medium mt-1">
+                      Submitted on <%= application.created_at.strftime("%B %d, %Y") %>
+                    </div>
+                  </div>
+                <% else %>
+                  <%= button_to "Submit Application", job_applications_path(job_offer_id: @job_offer.id), method: :post, class: "w-full py-3.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-sm font-bold text-white rounded-xl shadow-lg shadow-indigo-500/25 transition-all cursor-pointer text-center" %>
+                <% end %>
+              </div>
+
+            <% else %>
+              <!-- Test is missing or expired -->
+              <div class="p-5 rounded-xl border border-rose-500/20 bg-rose-500/10 text-center space-y-4">
+                <span class="text-[10px] font-extrabold text-rose-400 uppercase tracking-widest block">Assessment Required</span>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Your OCEAN personality test is missing or has expired (exceeded 90 days validity). You must retake the test to calculate compatibility and submit an application.
+                </p>
+                <%= link_to "Take OCEAN Test", new_applicants_personality_test_path, class: "inline-block w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white rounded-xl transition-colors cursor-pointer text-center" %>
+              </div>
+            <% end %>
+          </div>
+
+        <% elsif current_user.recruiter? %>
+          <!-- Recruiter View -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+            <h3 class="text-lg font-bold text-slate-100">Recruiter Details</h3>
+            <div class="p-3.5 rounded-xl border border-slate-800 bg-slate-900/40 text-xs text-slate-400 leading-normal">
+              You posted this job. You can view applicant matching metrics and manage applicants directly from your Recruiter Portal.
+            </div>
+            <%= link_to "Go to Recruiter Portal", recruiters_job_offers_path, class: "block w-full py-3 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-xs font-bold text-slate-200 text-center rounded-xl transition-colors" %>
+          </div>
+        <% end %>
+
+      <% else %>
+        <!-- Guest View -->
+        <div class="glass p-6 rounded-2xl border border-slate-800 shadow-xl text-center space-y-6">
+          <h3 class="text-lg font-bold text-slate-100">Ready to Apply?</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Create an applicant profile, complete the Big Five assessment, and instantly apply to roles with clear psychometric compatibility.
+          </p>
+          <div class="space-y-3 pt-2">
+            <%= link_to "Register to Apply", new_user_registration_path, class: "block w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-sm font-bold text-white rounded-xl shadow-lg transition-all" %>
+            <%= link_to "Log in", new_user_session_path, class: "block w-full py-3 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-xs font-bold text-slate-300 rounded-xl transition-colors" %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+  </div>
+</div>

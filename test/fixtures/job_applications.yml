@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  applicant: one
+  job_offer: one
+  status: MyString
+  ocean_snapshot: 
+
+two:
+  applicant: two
+  job_offer: two
+  status: MyString
+  ocean_snapshot: 

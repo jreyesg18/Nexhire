@@ -1,0 +1,147 @@
+<%= form_with(model: [:recruiters, job_offer], local: true, class: "space-y-6") do |f| %>
+  <% if job_offer.errors.any? %>
+    <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
+      <p class="font-bold mb-2">Please fix the following errors:</p>
+      <ul class="list-disc pl-5 space-y-1">
+        <% job_offer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="glass p-6 rounded-2xl border border-slate-800 space-y-5">
+    <h3 class="text-lg font-bold text-slate-100">Job Information</h3>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :title, "Job Title", class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+        <%= f.text_field :title, placeholder: "e.g. Senior Fullstack Developer", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+      <div>
+        <%= f.label :company_name, "Company Name", class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+        <%= f.text_field :company_name, placeholder: "e.g. Acme Corp", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :location, class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+        <%= f.text_field :location, placeholder: "e.g. New York, NY or Remote", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+      <div>
+        <%= f.label :salary, class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+        <%= f.text_field :salary, placeholder: "e.g. $120,000 - $150,000 / year", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :description, class: "block text-xs font-semibold text-slate-400 mb-1.5" %>
+      <%= f.text_area :description, rows: 6, placeholder: "Describe the role, responsibilities, and requirements...", class: "glass-input w-full px-4 py-2.5 rounded-xl text-sm" %>
+    </div>
+  </div>
+
+  <div class="glass p-6 rounded-2xl border border-slate-800 space-y-6">
+    <div>
+      <h3 class="text-lg font-bold text-slate-100">Ideal OCEAN Personality Blueprint</h3>
+      <p class="text-xs text-slate-400 mt-1">Configure target behavioral traits. Nexhire uses these values to calculate similarity matches for candidates.</p>
+    </div>
+
+    <div class="space-y-5">
+      <!-- Openness Slider -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-200">
+          <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+            Ideal Openness to Experience
+          </span>
+          <span class="text-xs font-black text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20" id="openness-badge">
+            <%= job_offer.ideal_openness %>%
+          </span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10">Low</span>
+          <%= f.range_field :ideal_openness, min: 0, max: 100, class: "w-full accent-cyan-550 h-1 bg-slate-900 rounded-lg cursor-pointer", oninput: "document.getElementById('openness-badge').innerText = this.value + '%'" %>
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10 text-right">High</span>
+        </div>
+      </div>
+
+      <!-- Conscientiousness Slider -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-200">
+          <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
+            Ideal Conscientiousness
+          </span>
+          <span class="text-xs font-black text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20" id="conscientiousness-badge">
+            <%= job_offer.ideal_conscientiousness %>%
+          </span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10">Low</span>
+          <%= f.range_field :ideal_conscientiousness, min: 0, max: 100, class: "w-full accent-indigo-550 h-1 bg-slate-900 rounded-lg cursor-pointer", oninput: "document.getElementById('conscientiousness-badge').innerText = this.value + '%'" %>
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10 text-right">High</span>
+        </div>
+      </div>
+
+      <!-- Extraversion Slider -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-200">
+          <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+            Ideal Extraversion
+          </span>
+          <span class="text-xs font-black text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20" id="extraversion-badge">
+            <%= job_offer.ideal_extraversion %>%
+          </span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10">Low</span>
+          <%= f.range_field :ideal_extraversion, min: 0, max: 100, class: "w-full accent-amber-550 h-1 bg-slate-900 rounded-lg cursor-pointer", oninput: "document.getElementById('extraversion-badge').innerText = this.value + '%'" %>
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10 text-right">High</span>
+        </div>
+      </div>
+
+      <!-- Agreeableness Slider -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-200">
+          <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+            Ideal Agreeableness
+          </span>
+          <span class="text-xs font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20" id="agreeableness-badge">
+            <%= job_offer.ideal_agreeableness %>%
+          </span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10">Low</span>
+          <%= f.range_field :ideal_agreeableness, min: 0, max: 100, class: "w-full accent-emerald-550 h-1 bg-slate-900 rounded-lg cursor-pointer", oninput: "document.getElementById('agreeableness-badge').innerText = this.value + '%'" %>
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10 text-right">High</span>
+        </div>
+      </div>
+
+      <!-- Neuroticism Slider -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-200">
+          <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+            Ideal Emotional Stability (Neuroticism)
+          </span>
+          <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20" id="neuroticism-badge">
+            <%= job_offer.ideal_neuroticism %>%
+          </span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10">Low</span>
+          <%= f.range_field :ideal_neuroticism, min: 0, max: 100, class: "w-full accent-rose-550 h-1 bg-slate-900 rounded-lg cursor-pointer", oninput: "document.getElementById('neuroticism-badge').innerText = this.value + '%'" %>
+          <span class="text-[10px] text-slate-500 font-bold uppercase w-10 text-right">High</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3">
+    <%= link_to "Cancel", recruiters_job_offers_path, class: "px-5 py-2.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-xs font-bold text-slate-300 transition-colors" %>
+    <%= f.submit "Publish Job Offer", class: "px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-xs font-bold text-white rounded-xl shadow-lg transition-all cursor-pointer" %>
+  </div>
+<% end %>
